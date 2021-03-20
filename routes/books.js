@@ -7,20 +7,20 @@ const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 // All Books Route
 router.get('/', async (req, res) => {
   let query = Book.find()
-  if (req.query.title != null && query.title != '') {
+  if (req.query.title != null && req.query.title != '') {
     query = query.regex('title', new RegExp(req.query.title, 'i'))
   }
-  if (req.query.publishedBefore != null && query.publishedBefore != '') {
+  if (req.query.publishedBefore != null && req.query.publishedBefore != '') {
     query = query.lte('publishDate', req.query.publishedBefore)
   }
-  if (req.query.publishedAfter != null && query.publishedAfter != '') {
+  if (req.query.publishedAfter != null && req.query.publishedAfter != '') {
     query = query.gte('publishDate', req.query.publishedAfter)
   }
   try {
     const books = await query.exec()
     res.render('books/index', {
       books: books,
-      searchOptions: req.query 
+      searchOptions: req.query
     })
   } catch {
     res.redirect('/')
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
     title: req.body.title,
     author: req.body.author,
     publishDate: new Date(req.body.publishDate),
-    pageCount: parseInt(req.body.pageCount),
+    pageCount: req.body.pageCount,
     description: req.body.description
   })
   saveCover(book, req.body.cover)
